@@ -19,6 +19,6 @@ def will_it_float(V, mass):
     return mass*g < V*g*water_density
 
 def calculate_pressure(depth):
-    '''Calculates pressure at a given depth in water'''
+    '''Calculates pressure at a given depth in water where depth can be a positive or negative value'''
     return water_density*g*abs(depth)
 
