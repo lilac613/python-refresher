@@ -1,5 +1,7 @@
 g = 9.81
 water_density = 1000
+pressure_at_surface = 101325
+
 def calculate_buoyancy(V, density_fluid):
     '''Calculates the buoyancy forced exerted an object submerged in water'''
     if V <= 0:
@@ -20,5 +22,5 @@ def will_it_float(V, mass):
 
 def calculate_pressure(depth):
     '''Calculates pressure at a given depth in water where depth can be a positive or negative value'''
-    return water_density*g*abs(depth)
+    return water_density*g*abs(depth) + pressure_at_surface
 
