@@ -84,13 +84,14 @@ def calculate_auv2_acceleration(T, alpha, theta, mass):
         raise ValueError("Invalid values!")
     # reference frame of ROV
     components = np.array([[np.cos(alpha), np.cos(alpha), -np.cos(alpha), -np.cos(alpha)],
-                               [np.sin(alpha), -np.sin(alpha), -np.sin(alpha), np.sin(alpha)]])
+                            [np.sin(alpha), -np.sin(alpha), -np.sin(alpha), np.sin(alpha)]])
     net_force_prime = np.matmul(components,T)
 
     # global reference frame
     rotation_matrix = np.array([[np.cos(theta),-np.sin(theta)],
                                 [np.sin(theta),np.cos(theta)]])
     net_force = np.matmul(rotation_matrix,net_force_prime)
+    
     acceleration_x = net_force[0]/mass
     acceleration_y = net_force[1]/mass
     net_acceleration = np.array([acceleration_x,acceleration_y])
@@ -105,5 +106,5 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
                            [L*np.sin(alpha)+l*np.cos(alpha)]
                            [-L*np.sin(alpha)+l*np.cos(alpha)]])
     net_torque = np.matmul(components,T)
-    angular_acceleration = net_torque/inertia
+    angular_acceleration = calculate_angular_acceleration(net_torque,inertia)
     return angular_acceleration
