@@ -1,5 +1,6 @@
 import unittest
 import physics
+import numpy as np
 
 class TestPhysics(unittest.TestCase):
     def test_calculate_buoyancy(self):
@@ -41,6 +42,13 @@ class TestPhysics(unittest.TestCase):
         self.assertRaises(ValueError,physics.calculate_moment_of_inertia,0,5)
         self.assertRaises(ValueError,physics.calculate_moment_of_inertia,5,0)
 
+    def test_calculate_auv_acceleration(self):
+        self.assertEqual(np.allclose(physics.calculate_auv_acceleration(50,np.pi/2,25),np.array([2*np.cos(np.pi/2),2*np.sin(np.pi/2)])),True)
+        self.assertNotEqual(np.allclose(physics.calculate_auv_acceleration(30,np.pi,1),np.array([1.0,2.0])),True)
+        self.assertRaises(ValueError,physics.calculate_auv_acceleration,-10,1,2,3,4)
+        self.assertRaises(ValueError,physics.calculate_auv_acceleration,10,1,-2,3,4)
+        self.assertRaises(ValueError,physics.calculate_auv_acceleration,10,1,2,-3,4)
+        self.assertRaises(ValueError,physics.calculate_auv_acceleration,10,1,2,3,-4)
 
 
 

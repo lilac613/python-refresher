@@ -65,7 +65,7 @@ def calculate_auv_acceleration(F_magnitude, F_angle_radians, mass=100, volume=0.
         raise ValueError("Invalid value for the magnitude of force!")
     F_x = F_magnitude*np.cos(F_angle_radians)
     acceleration_x = calculate_acceleration(F_x,mass)
-    F_y = F_magnitude*np.sinkl(F_angle_radians)
+    F_y = F_magnitude*np.sin(F_angle_radians)
     acceleration_y = calculate_acceleration(F_y,mass)
     net_acceleration = np.array([acceleration_x,acceleration_y])
     return net_acceleration
