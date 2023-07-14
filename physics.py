@@ -65,18 +65,45 @@ def calculate_auv_acceleration(F_magnitude, F_angle_radians, mass=100, volume=0.
         raise ValueError("Invalid value for the magnitude of force!")
     F_x = F_magnitude*np.cos(F_angle_radians)
     acceleration_x = calculate_acceleration(F_x,mass)
-    F_y = F_magnitude*np.sin(F_angle_radians)
+    F_y = F_magnitude*np.sinkl(F_angle_radians)
     acceleration_y = calculate_acceleration(F_y,mass)
     net_acceleration = np.array([acceleration_x,acceleration_y])
+    return net_acceleration
     
 def calculate_auv_angular_acceleration(F_magnitude,F_angle_radians,inertia=1,thruster_distance=0.5):
     '''Calculates the angular acceleration of the AUV'''
     if F_magnitude <=0 or inertia <=0 or thruster_distance <= 0:
         raise ValueError("Invalid values!")
-    
+    perpendicular_force = F_magnitude*np.sin(F_angle_radians)
+    angular_acceleration = perpendicular_force*thruster_distance
+    return angular_acceleration
 
-    
-    
-    
+def calculate_auv2_acceleration(T, alpha, theta, mass):
+    '''Calculates the acceleration of the AUV in the 2D plane'''
+    if mass<=0:
+        raise ValueError("Invalid values!")
+    # reference frame of ROV
+    components = np.array([[np.cos(alpha), np.cos(alpha), -np.cos(alpha), -np.cos(alpha)],
+                               [np.sin(alpha), -np.sin(alpha), -np.sin(alpha), np.sin(alpha)]])
+    net_force_prime = np.matmul(components,T)
 
+    # global reference frame
+    rotation_matrix = np.array([[np.cos(theta),-np.sin(theta)],
+                                [np.sin(theta),np.cos(theta)]])
+    net_force = np.matmul(rotation_matrix,net_force_prime)
+    acceleration_x = net_force[0]/mass
+    acceleration_y = net_force[1]/mass
+    net_acceleration = np.array([acceleration_x,acceleration_y])
+    return net_acceleration
 
+def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
+    '''Calculates the angular acceleration of the AUV'''
+    if L<=0 or l<=0 or inertia<=0:
+        raise ValueError("Invalid values!")
+    components = np.array([[L*np.sin(alpha)+l*np.cos(alpha)],
+                           [-L*np.sin(alpha)+l*np.cos(alpha)]
+                           [L*np.sin(alpha)+l*np.cos(alpha)]
+                           [-L*np.sin(alpha)+l*np.cos(alpha)]])
+    net_torque = np.matmul(components,T)
+    angular_acceleration = net_torque/inertia
+    return angular_acceleration
