@@ -1,11 +1,10 @@
 import unittest
 import physics
 
-
 class TestPhysics(unittest.TestCase):
     def test_calculate_buoyancy(self):
         self.assertEqual(physics.calculate_buoyancy(10,1000), 98100.0)
-        self.assertNotEqual(physics.calculate_buoyancy(10,1000),1.0)
+        self.assertNotEqual(physics.calculate_buoyancy(40,1000),1.0)
         self.assertRaises(ValueError,physics.calculate_buoyancy,-10,1000)
         self.assertRaises(ValueError,physics.calculate_buoyancy,10,-1000)
 
@@ -17,8 +16,30 @@ class TestPhysics(unittest.TestCase):
         self.assertEqual(physics.will_it_float(5,5000),None)
 
     def test_calculate_pressure(self):
-        self.assertEqual(physics.calculate_pressure(10),98100.0+101325)
-        self.assertNotEqual(physics.calculate_pressure(10),1.0)
+        self.assertEqual(physics.calculate_pressure(10),98100.0+101325.0)
+        self.assertNotEqual(physics.calculate_pressure(40),1.0)
+
+    def test_calculate_acceleration(self):
+        self.assertEqual(physics.calculate_acceleration(10,5),2.0)
+        self.assertNotEqual(physics.calculate_acceleration(40,5),1.0)
+        self.assertRaises(ValueError,physics.calculate_acceleration,10,0)
+
+    def test_calculate_angular_acceleration(self):
+        self.assertEqual(physics.calculate_angular_acceleration(10,5),2.0)
+        self.assertNotEqual(physics.calculate_angular_acceleration(40,5),1.0)
+        self.assertRaises(ValueError,physics.calculate_angular_acceleration,10,0)
+
+    def test_calculate_torque(self):
+        self.assertAlmostEquals(physics.calculate_torque(10,30,5),25.0)
+        self.assertNotEqual(physics.calculate_torque(10,40,5),1.0)
+        self.assertRaises(ValueError,physics.calculate_torque,0,30,5)
+        self.assertRaises(ValueError,physics.calculate_torque,10,30,0)
+    
+    def test_calculate_moment_of_inertia(self):
+        self.assertEqual(physics.calculate_moment_of_inertia(5,3),45.0)
+        self.assertNotEqual(physics.calculate_moment_of_inertia(4,3),1.0)
+        self.assertRaises(ValueError,physics.calculate_moment_of_inertia,0,5)
+        self.assertRaises(ValueError,physics.calculate_moment_of_inertia,5,0)
 
 
 
