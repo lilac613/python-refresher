@@ -80,7 +80,7 @@ def calculate_auv_angular_acceleration(F_magnitude,F_angle_radians,inertia=1,thr
 
 def calculate_auv2_acceleration(T, alpha, theta, mass):
     '''Calculates the acceleration of the AUV in the 2D plane'''
-    if mass<=0:
+    if mass <= 0:
         raise ValueError("Invalid values!")
     # reference frame of ROV
     components = np.array([[np.cos(alpha), np.cos(alpha), -np.cos(alpha), -np.cos(alpha)],
