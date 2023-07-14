@@ -50,6 +50,14 @@ class TestPhysics(unittest.TestCase):
         self.assertRaises(ValueError,physics.calculate_auv_acceleration,10,1,2,-3,4)
         self.assertRaises(ValueError,physics.calculate_auv_acceleration,10,1,2,3,-4)
 
+    def test_calculate_auv_angular_acceleration(self):
+        self.assertAlmostEqual(physics.calculate_auv_angular_acceleration(10,np.pi/6,6,3),2.5)
+        self.assertNotEqual(physics.calculate_auv_angular_acceleration(100,np.pi,3,2),1.0)
+        self.assertRaises(ValueError,physics.calculate_auv_angular_acceleration,-5,np.pi,3,2)
+        self.assertRaises(ValueError,physics.calculate_auv_angular_acceleration,10,np.pi,-3,2)
+        self.assertRaises(ValueError,physics.calculate_auv_angular_acceleration,10,np.pi,3,-2)
+
+
 
 
 if __name__ == "__main__":

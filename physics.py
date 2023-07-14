@@ -75,7 +75,7 @@ def calculate_auv_angular_acceleration(F_magnitude,F_angle_radians,inertia=1,thr
     if F_magnitude <=0 or inertia <=0 or thruster_distance <= 0:
         raise ValueError("Invalid values!")
     perpendicular_force = F_magnitude*np.sin(F_angle_radians)
-    angular_acceleration = perpendicular_force*thruster_distance
+    angular_acceleration = calculate_angular_acceleration(perpendicular_force*thruster_distance,inertia)
     return angular_acceleration
 
 def calculate_auv2_acceleration(T, alpha, theta, mass):
