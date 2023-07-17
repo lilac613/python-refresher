@@ -56,7 +56,7 @@ def calculate_moment_of_inertia(m,r):
     the distance from the axis of rotation to the center of mass of the object'''
     if m<=0 or r<=0:
         raise ValueError("Invalid values!")
-    moment_of_inertia = m*(r**2)
+    moment_of_inertia = m*np.power(r,2)
     return moment_of_inertia
 
 def calculate_auv_acceleration(F_magnitude, F_angle_radians, mass=100, volume=0.1, thruster_distance=0.5):
