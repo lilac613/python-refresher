@@ -78,7 +78,7 @@ def calculate_auv_angular_acceleration(F_magnitude,F_angle_radians,inertia=1,thr
     angular_acceleration = calculate_angular_acceleration(perpendicular_force*thruster_distance,inertia)
     return angular_acceleration
 
-def calculate_auv2_acceleration(T, alpha, theta, mass):
+def calculate_auv2_acceleration(T, alpha, theta, mass=100):
     '''Calculates the acceleration of the AUV in the 2D plane'''
     if mass <= 0:
         raise ValueError("Invalid values!")
@@ -101,10 +101,10 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
     '''Calculates the angular acceleration of the AUV'''
     if L<=0 or l<=0 or inertia<=0:
         raise ValueError("Invalid values!")
-    components = np.array([[L*np.sin(alpha)+l*np.cos(alpha)],
-                           [-L*np.sin(alpha)+l*np.cos(alpha)]
-                           [L*np.sin(alpha)+l*np.cos(alpha)]
-                           [-L*np.sin(alpha)+l*np.cos(alpha)]])
+    components = np.array([L*np.sin(alpha)+l*np.cos(alpha),
+                           -L*np.sin(alpha)-l*np.cos(alpha),
+                           L*np.sin(alpha)+l*np.cos(alpha),
+                           -L*np.sin(alpha)-l*np.cos(alpha)])
     net_torque = np.matmul(components,T)
     angular_acceleration = calculate_angular_acceleration(net_torque,inertia)
     return angular_acceleration

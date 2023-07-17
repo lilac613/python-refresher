@@ -57,6 +57,22 @@ class TestPhysics(unittest.TestCase):
         self.assertRaises(ValueError,physics.calculate_auv_angular_acceleration,10,np.pi,-3,2)
         self.assertRaises(ValueError,physics.calculate_auv_angular_acceleration,10,np.pi,3,-2)
 
+    def test_calculate_auv2_acceleration(self):
+        self.assertTrue(np.allclose(physics.calculate_auv2_acceleration(np.array([0,0,0,0]),np.pi/4,0.0), np.array([0,0])))
+        self.assertTrue(np.allclose(physics.calculate_auv2_acceleration(np.array([10,10,10,10]),np.pi/4,0.0),np.array([0,0])))
+        self.assertTrue(np.allclose(physics.calculate_auv2_acceleration(np.array([10,10,0,0]),np.pi/4,0.0),np.array([0.141422,0])))
+        self.assertTrue(np.allclose(physics.calculate_auv2_acceleration(np.array([10,0,0,10]),np.pi/2 ,0),np.array([0,0.2])))
+        self.assertTrue(np.allclose(physics.calculate_auv2_acceleration(np.array([10,0,0,10]),np.pi/2,np.pi/2),np.array([-0.2,0])))
+        self.assertFalse(np.allclose(physics.calculate_auv2_acceleration(np.array([10,0,0,10]),np.pi/3, np.pi/2), np.array([-0.2,0])))
+
+    def test_calculate_auv2_angular_acceleration(self):
+        self.assertEqual(physics.calculate_auv2_angular_acceleration(np.array([0,0,0,0]),0,1,1),0)
+        self.assertAlmostEqual(physics.calculate_auv2_angular_acceleration(np.array([10,0,0,0]),np.pi/2,1,1),0.1)
+        self.assertEqual(physics.calculate_auv2_angular_acceleration(np.array([10,10,10,10]),np.pi/4,1,1),0)
+        self.assertNotEqual(physics.calculate_auv2_angular_acceleration(np.array([15,10,14,10]),np.pi/4,1,1),0)
+        self.assertAlmostEqual(physics.calculate_auv2_angular_acceleration(np.array([10,0,0,0]),np.pi/4,1,1),0.14142135623)
+
+
 
 
 
