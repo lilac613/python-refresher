@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 g = 9.81
 water_density = 1000
@@ -82,8 +83,6 @@ def calculate_auv2_acceleration(T, alpha, theta, mass=100):
     '''Calculates the acceleration of the AUV in the 2D plane'''
     if type(T) != np.ndarray:
         raise TypeError("T has to be an ndarray!")
-    if np.shape(T) != (4,1):
-        raise ValueError("Invalid values!")
     if mass <= 0:
         raise ValueError("Invalid values!")
     # reference frame of ROV
@@ -105,8 +104,6 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
     '''Calculates the angular acceleration of the AUV'''
     if type(T) != np.ndarray:
         raise TypeError("T has to be an ndarray!")
-    if np.shape(T) != (4,1):
-        raise ValueError("Invalid values!")
     if L<=0 or l<=0 or inertia<=0:
         raise ValueError("Invalid values!")
     components = np.array([L*np.sin(alpha)+l*np.cos(alpha),
@@ -116,3 +113,59 @@ def calculate_auv2_angular_acceleration(T, alpha, L, l, inertia=100):
     net_torque = np.matmul(components,T)
     angular_acceleration = calculate_angular_acceleration(net_torque,inertia)
     return angular_acceleration
+
+def simulate_auv2_motion(T, alpha, L, l, mass=100, inertia=100, dt=0.1, t_final=10, x0=0, y0=0, theta0=0):
+    '''Simulates the motion of the AUV in the 2D plane'''
+    time = np.arange(0,t_final,dt)
+    x = np.zeros_like(time) 
+    x[0] = x0
+    y = np.zeros_like(time)
+    y[0] = y0
+    theta = np.zeros_like(time)
+    theta[0] = theta0
+    v = np.zeros(shape=(len(time),2))
+    omega = np.zeros_like(time)
+    linear_acceleration = np.zeros(shape=(len(time),2))
+    angular_acceleration = np.zeros_like(time) 
+    for i in range(1,len(time)):
+        linear_acceleration[i][0] = linear_acceleration[i-1][0] + calculate_auv2_acceleration(T,alpha,theta[i-1],mass)[0]
+        linear_acceleration[i][1] = linear_acceleration[i-1][1] + calculate_auv2_acceleration(T,alpha,theta[i-1],mass)[1]
+        v[i][0] = v[i-1][0] + linear_acceleration[i-1][0]*dt
+        v[i][1] = v[i-1][1] + linear_acceleration[i-1][1]*dt
+        x[i] = x[i-1] + v[i-1][0]*dt + 0.5*linear_acceleration[i-1][0]*np.power(dt,2)
+        y[i] = y[i-1] + v[i-1][1]*dt + 0.5*linear_acceleration[i-1][1]*np.power(dt,2)
+
+        angular_acceleration[i] = angular_acceleration[i-1] + calculate_auv2_angular_acceleration(T,alpha,L,l,inertia)
+        omega[i] = omega[i-1] + angular_acceleration[i-1]*dt
+        theta[i] = np.mod((theta[i-1] + omega[i-1]*dt + 0.5*angular_acceleration[i-1]*np.power(dt,2)),(2*np.pi))
+    ret = (time,x,y,theta,v,omega,linear_acceleration)
+    return ret
+
+simulate_auv2_motion(np.array([10,10,5,5]), np.pi/4,3,4)
+
+def plot_auv2_motion(t, x, y, theta, v, omega, a):
+    '''Plots the motion of the AUV in the 2D plane'''
+    plt.plot(t, x, label="X-Position")
+    plt.plot(t, y, label="Y-Position")
+    plt.plot(t, theta, label="Angular Displacement")
+    vx = np.zeros_like(t)
+    vy = np.zeros_like(t)
+    ax = np.zeros_like(t)
+    ay = np.zeros_like(t)
+    for i in range(0,len(v)):
+        vx[i] = v[i][0]
+        vy[i] = v[i][1]
+        ax[i] = a[i][0]
+        ay[i] = a[i][1]
+    plt.plot(t,omega,label="Angular velocity")
+    plt.plot(t,vx,label="X-Velocity")
+    plt.plot(t,vy,label="Y-Velocity")
+    plt.plot(t,ax,label="X-Acceleration")
+    plt.plot(t,ay,label="Y-Acceleration")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Position (m), Velocity (m/s), Acceleration (m/s^2)")
+    plt.legend()
+    plt.show()
+
+(time, x, y, theta, v, omega, a) = simulate_auv2_motion(np.array([1,3,6,5]),4,2,2)
+plot_auv2_motion(time, x, y, theta, v, omega, a)
