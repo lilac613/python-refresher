@@ -72,6 +72,31 @@ class TestPhysics(unittest.TestCase):
         self.assertNotEqual(physics.calculate_auv2_angular_acceleration(np.array([15,10,14,10]),np.pi/4,1,1),0)
         self.assertAlmostEqual(physics.calculate_auv2_angular_acceleration(np.array([10,0,0,0]),np.pi/4,1,1),0.14142135623)
 
+    def test_simulate_auv2_motion(self):
+        # no forces on auv
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([0,0,0,0]),np.pi/4,8,6,100,100,3)[0],np.array([0,3,6,9])))
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([0,0,0,0]),np.pi/4,8,6,100,100,3)[1],np.array([0,0,0,0])))
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([0,0,0,0]),np.pi/4,8,6,100,100,3)[2],np.array([0,0,0,0])))
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([0,0,0,0]),np.pi/4,8,6,100,100,3)[3],np.array([0,0,0,0])))
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([0,0,0,0]),np.pi/4,8,6,100,100,3)[4],np.array([[0,0],[0,0],[0,0],[0,0]])))
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([0,0,0,0]),np.pi/4,8,6,100,100,3)[5],np.array([0,0,0,0])))
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([0,0,0,0]),np.pi/4,8,6,100,100,3)[6],np.array([[0,0],[0,0],[0,0],[0,0]])))
+        
+        # only one thruster exerts force on auv
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([10,0,0,0]),np.pi/4,8,6,100,100,3)[0],np.array([0,3,6,9])))
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([10,0,0,0]),np.pi/4,8,6,100,100,3)[1],np.array([0,0,0,1])))
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([10,0,0,0]),np.pi/4,8,6,100,100,3)[2],np.array([0,0,0,1])))
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([10,0,0,0]),np.pi/4,8,6,100,100,3)[3],np.array([0,0,0,0])))
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([10,0,0,0]),np.pi/4,8,6,100,100,3)[4],np.array([[0,0],[0,0],[0.21213203,0.21213203],[0.6363961,0.6363961]])))
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([10,0,0,0]),np.pi/4,8,6,100,100,3)[5],np.array([0,0,0,0])))
+        self.assertTrue(np.allclose(physics.simulate_auv2_motion(np.array([10,0,0,0]),np.pi/4,8,6,100,100,3)[6],np.array([[0,0],[0.07071068,0.07071068],[0.14142136,0.14142136],[0.21213203,0.21213203]])))
+        
+        
+        
+        #self.assertEqual(physics.simulate_auv2_motion(np.array([10,10,0,0]),np.pi/4,8,5,100,100,3),)
+        #self.assertEqual(physics.simulate_auv2_motion(np.array([10,10,10,10]),np.pi/4,8,5,100,100,3),)
+        #self.assertEqual(physics.simulate_auv2_motion(np.array([10,0,10,0])np.pi/4,8,5,100,100,3),)
+
 
 
 

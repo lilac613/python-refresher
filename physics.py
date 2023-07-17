@@ -141,12 +141,10 @@ def simulate_auv2_motion(T, alpha, L, l, mass=100, inertia=100, dt=0.1, t_final=
     ret = (time,x,y,theta,v,omega,linear_acceleration)
     return ret
 
-simulate_auv2_motion(np.array([10,10,5,5]), np.pi/4,3,4)
-
 def plot_auv2_motion(t, x, y, theta, v, omega, a):
     '''Plots the motion of the AUV in the 2D plane'''
     plt.plot(t, x, label="X-Position")
-    plt.plot(t, y, label="Y-Position")
+    #plt.plot(t, y, label="Y-Position")
     plt.plot(t, theta, label="Angular Displacement")
     vx = np.zeros_like(t)
     vy = np.zeros_like(t)
@@ -167,5 +165,5 @@ def plot_auv2_motion(t, x, y, theta, v, omega, a):
     plt.legend()
     plt.show()
 
-(time, x, y, theta, v, omega, a) = simulate_auv2_motion(np.array([1,3,6,5]),4,2,2)
+(time, x, y, theta, v, omega, a) = simulate_auv2_motion(np.array([10,0,0,0]),np.pi/4,8,6,100,100,3)
 plot_auv2_motion(time, x, y, theta, v, omega, a)
