@@ -128,6 +128,10 @@ def simulate_auv2_motion(T, alpha, L, l, mass=100, inertia=100, dt=0.1, t_final=
     linear_acceleration = np.zeros(shape=(len(time),2))
     angular_acceleration = np.zeros_like(time) 
     for i in range(1,len(time)):
+        angular_acceleration[i] = calculate_auv2_angular_acceleration(T,alpha,L,l,inertia)
+        omega[i] = omega[i-1] + angular_acceleration[i-1]*dt
+        theta[i] = np.mod(theta[i-1] + omega[i]*dt,(2*np.pi))
+
         linear_acceleration[i][0] = calculate_auv2_acceleration(T,alpha,theta[i],mass)[0]
         linear_acceleration[i][1] = calculate_auv2_acceleration(T,alpha,theta[i],mass)[1]
         v[i][0] = v[i-1][0] + linear_acceleration[i][0]*dt
@@ -135,9 +139,7 @@ def simulate_auv2_motion(T, alpha, L, l, mass=100, inertia=100, dt=0.1, t_final=
         x[i] = x[i-1] + v[i][0]*dt
         y[i] = y[i-1] + v[i][1]*dt
 
-        angular_acceleration[i] = calculate_auv2_angular_acceleration(T,alpha,L,l,inertia)
-        omega[i] = omega[i-1] + angular_acceleration[i-1]*dt
-        theta[i] = np.mod(theta[i-1] + omega[i]*dt,(2*np.pi))
+        
     ret = (time,x,y,theta,v,omega,linear_acceleration)
     return ret
 
