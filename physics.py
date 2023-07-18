@@ -143,7 +143,6 @@ def simulate_auv2_motion(T, alpha, L, l, mass=100, inertia=100, dt=0.1, t_final=
     ret = (time,x,y,theta,v,omega,linear_acceleration)
     return ret
 
-
 def plot_auv2_motion(t, x, y, theta, v, omega, a):
     '''Plots the motion of the AUV in the 2D plane'''
     plt.plot(t, x, label="X-Position")
