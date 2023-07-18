@@ -128,23 +128,24 @@ def simulate_auv2_motion(T, alpha, L, l, mass=100, inertia=100, dt=0.1, t_final=
     linear_acceleration = np.zeros(shape=(len(time),2))
     angular_acceleration = np.zeros_like(time) 
     for i in range(1,len(time)):
-        linear_acceleration[i][0] = linear_acceleration[i-1][0] + calculate_auv2_acceleration(T,alpha,theta[i-1],mass)[0]
-        linear_acceleration[i][1] = linear_acceleration[i-1][1] + calculate_auv2_acceleration(T,alpha,theta[i-1],mass)[1]
-        v[i][0] = v[i-1][0] + linear_acceleration[i-1][0]*dt
-        v[i][1] = v[i-1][1] + linear_acceleration[i-1][1]*dt
-        x[i] = x[i-1] + v[i-1][0]*dt + 0.5*linear_acceleration[i-1][0]*np.power(dt,2)
-        y[i] = y[i-1] + v[i-1][1]*dt + 0.5*linear_acceleration[i-1][1]*np.power(dt,2)
+        linear_acceleration[i][0] = calculate_auv2_acceleration(T,alpha,theta[i],mass)[0]
+        linear_acceleration[i][1] = calculate_auv2_acceleration(T,alpha,theta[i],mass)[1]
+        v[i][0] = v[i-1][0] + linear_acceleration[i][0]*dt
+        v[i][1] = v[i-1][1] + linear_acceleration[i][1]*dt
+        x[i] = x[i-1] + v[i][0]*dt
+        y[i] = y[i-1] + v[i][1]*dt
 
-        angular_acceleration[i] = angular_acceleration[i-1] + calculate_auv2_angular_acceleration(T,alpha,L,l,inertia)
+        angular_acceleration[i] = calculate_auv2_angular_acceleration(T,alpha,L,l,inertia)
         omega[i] = omega[i-1] + angular_acceleration[i-1]*dt
-        theta[i] = np.mod((theta[i-1] + omega[i-1]*dt + 0.5*angular_acceleration[i-1]*np.power(dt,2)),(2*np.pi))
+        theta[i] = np.mod(theta[i-1] + omega[i]*dt,(2*np.pi))
     ret = (time,x,y,theta,v,omega,linear_acceleration)
     return ret
+
 
 def plot_auv2_motion(t, x, y, theta, v, omega, a):
     '''Plots the motion of the AUV in the 2D plane'''
     plt.plot(t, x, label="X-Position")
-    #plt.plot(t, y, label="Y-Position")
+    plt.plot(t, y, label="Y-Position")
     plt.plot(t, theta, label="Angular Displacement")
     vx = np.zeros_like(t)
     vy = np.zeros_like(t)
