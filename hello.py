@@ -67,10 +67,6 @@ if __name__ == "__main__":
 # print(mul (-3,-5))
 # print(mul (-3,5))
 
-# print(div (3,5))
-# print(div (0,5))
-# print(div (5,0))
-
 # print(sqrt(-4))
 # print(sqrt(4))
 # print(sqrt(25))
